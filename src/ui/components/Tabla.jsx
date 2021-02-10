@@ -1,136 +1,105 @@
 import { useEffect } from "react";
 import Paginacion from "./Paginacion";
-import logo from './assets/processed.jpeg'
+import logo from "./assets/processed.jpeg";
 
 export default function Tabla() {
     const [datos, setData] = useState([]);
     const [loader, setLoader] = useState(false);
     const [paginaActiva, setPaginaActiva] = useState(1);
     const [cantidad, setCantidad] = useState([]);
-    const [estiloCard, setEstiloCard] = useState('');
 
-
-    const offers = (props) => {
+    const offers = props => {
         if (props === 0) {
-                return
+            return;
         }
-        setLoader('true');
+        setLoader("true");
         setCantidad([]);
         var requestOptions = {
             method: "GET",
         };
         fetch(
-            "https://e6di35qzm7.execute-api.us-west-2.amazonaws.com/latest/directory?epp=9&p=" + props + "",
+            "https://e6di35qzm7.execute-api.us-west-2.amazonaws.com/latest/directory?epp=9&p=" +
+                props +
+                "",
             requestOptions,
         )
             .then(response => response.json())
             .then(result => {
                 let arr = [];
                 for (let i = props + 1; i <= props + 3; i++) {
-                    // if (i < 5) {
-                        if (result.pages !== i) {
-                            arr.push({ 'boton': i });
-                            
-                            // }
-                        }
-                        
+                    if (result.pages !== i) {
+                        arr.push({ boton: i });
                     }
-                    setPaginaActiva(result.page);
+                }
+                setPaginaActiva(result.page);
                 setCantidad(arr);
                 setLoader(false);
                 return setData(result.data);
             })
             .catch(error => console.log("error", error));
-    }
+    };
 
     useEffect(() => {
         offers(paginaActiva);
     }, []);
 
-    const setIsShown = (props, e) => {
-        e.preventDefault();
-        if (props) {
-            const estilo = {
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                left: 0,
-                right: 0,
-                backgroundColor: 'red',
-                opacity: 1
-            }
-            setEstiloCard(estilo);
-        } else {
-            const estilo = {};
-            setEstiloCard(estilo);
-        }
-    }
-
-
     const list = datos.map(datoss => {
         return (
-            // eslint-disable-next-line react/jsx-key
-            <button
-                className="col-md-4 mb-5 prueba"
-                id={datoss.name}
-            >
-                <div className="card" style={{ width: '19rem', height: '18rem', backgroundColor: 'black' }}>
+            <button className="col-md-4 mb-5 prueba" id={datoss.name}>
+                <div
+                    className="card"
+                    style={{
+                        width: "19rem",
+                        height: "18rem",
+                        backgroundColor: "black",
+                    }}>
                     <div
                         className="card-body font-weight-bold "
-                        style={{ height: '170px' }}
-                    >
-                        <h6 className="card-title font-weight-bold" style={{ color: "#2e58ff" }}>{datoss.name}</h6>
-                        <img
-                            // src="https://www.underconsideration.com/brandnew/archives/yema_logo.png"
-                            alt=""
-                            src={logo}
-                            style={{ width: '100%' }}
-
-                        />
-                        <small style={{ color: "white" }} key={datoss._id}>Descuento de {datoss.discount}%</small>
+                        style={{ height: "170px" }}>
+                        <h6
+                            className="card-title font-weight-bold"
+                            style={{ color: "#2e58ff" }}>
+                            {datoss.name}
+                        </h6>
+                        <img alt="Logo" src={logo} style={{ width: "100%" }} />
+                        <small style={{ color: "white" }} key={datoss._id}>
+                            Descuento de {datoss.discount}%
+                        </small>
                     </div>
                 </div>
-
             </button>
         );
     });
     if (loader) {
         return (
-            <div className="row justify-center" style={{marginTop:'10%'}}>
-            <div class="loading">
-                <div class="dot" />
-                <div class="dot" />
-                <div class="dot" />
-                <div class="dot" />
-                <div class="dot" />
+            <div className="row justify-center" style={{ marginTop: "10%" }}>
+                <div class="loading">
+                    <div class="dot" />
+                    <div class="dot" />
+                    <div class="dot" />
+                    <div class="dot" />
+                    <div class="dot" />
+                </div>
             </div>
-            </div>
-        )
+        );
     } else {
         return (
-
             <div className="container fadeIn">
-
                 <div className=" text-center mt-3 mb-5 text-black">
                     <h2 className="font-weight-bold">Tiendas Disponibles</h2>
                 </div>
-                <div className="row">
-                    {list}
-                </div>
+                <div className="row">{list}</div>
                 <Paginacion
                     back={() => offers(paginaActiva - 1)}
                     next={() => offers(paginaActiva + 1)}
                     cantidad={cantidad}
                     paginaActiva={paginaActiva}
-                    handleClick={(e) => {
+                    handleClick={e => {
                         e.preventDefault();
-                        console.log(e.target.id);
                         offers(Number(e.target.id));
                     }}
                 />
-
             </div>
         );
     }
-
 }

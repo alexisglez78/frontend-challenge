@@ -1,9 +1,0 @@
-.ion-color-blue {
-    --ion-color-base: #2e58ff;
-    --ion-color-base-rgb: 46, 88, 255;
-    --ion-color-contrast: #fff;
-    --ion-color-contrast-rgb: 255, 255, 255;
-    --ion-color-shade: #294fe5;
-    --ion-color-tint: #4268ff;
-}
-   
