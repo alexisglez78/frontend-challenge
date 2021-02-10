@@ -29,6 +29,7 @@
         "preval.macro": "^5.0.0",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
+        "react-icons": "^4.2.0",
         "recharts": "^1.8.5",
         "stylelint-scss": "^3.17.1"
     },
